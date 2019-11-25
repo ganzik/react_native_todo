@@ -8,21 +8,44 @@ import {
   TextInput,
   Dimensions
 } from "react-native";
+import ToDo from "./ToDo";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { height, width } = Dimensions.get("window");
 
 export default class App extends Component {
+  state = {
+    newToDo: ""
+  };
   render() {
+    const { newToDo } = this.state;
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Text style={styles.title}>chacha main page</Text>
         <View style={styles.card}>
-          <TextInput style={styles.input} placeholder={"New to do"} />
+          {/* autoCorrect 자동완성 기능, returnKeyType 리턴 키 이름 지정 */}
+          <TextInput
+            style={styles.input}
+            placeholder={"New to do"}
+            value={newToDo}
+            onChangeText={this._crontollNewToDo}
+            placeholderTextColor={"#999"}
+            returnKeyType={"done"}
+            autoCorrect={false}
+          />
+          <ScrollView contentContainerStyle={styles.toDos}>
+            <ToDo />
+          </ScrollView>
         </View>
       </View>
     );
   }
+  _crontollNewToDo = text => {
+    this.setState({
+      newToDo: text
+    });
+  };
 }
 const styles = StyleSheet.create({
   container: {
@@ -67,5 +90,14 @@ const styles = StyleSheet.create({
         elevation: 3
       }
     })
+  },
+  input: {
+    padding: 20,
+    borderBottomColor: "#bbb",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    fontSize: 25
+  },
+  toDos: {
+    alignItems: "center"
   }
 });
