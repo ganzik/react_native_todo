@@ -25,6 +25,7 @@ class ToDo extends Component {
     deleteToDo: PropTypes.func.isRequired,
     uncompleteToDo: PropTypes.func.isRequired,
     completeToDo: PropTypes.func.isRequired,
+    updateToDo: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired
   };
 
@@ -82,7 +83,12 @@ class ToDo extends Component {
                 <Text style={styles.actionText}>✏️</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPressOut={() => deleteToDo(id)}>
+            <TouchableOpacity
+              onPressOut={event => {
+                event.stopPropagation;
+                deleteToDo(id);
+              }}
+            >
               <View style={styles.actionContainer}>
                 <Text style={styles.actionText}>❌</Text>
               </View>
@@ -92,27 +98,26 @@ class ToDo extends Component {
       </View>
     );
   }
-  _toggleComplete = () => {
+  _toggleComplete = event => {
+    event.stopPropagation();
     const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
     if (isCompleted) {
       uncompleteToDo(id);
     } else {
       completeToDo(id);
     }
-    // this.setState(prevState => {
-    //   return {
-    //     isCompleted: !prevState.isCompleted
-    //   };
-    // });
   };
 
-  _startEditing = () => {
+  _startEditing = event => {
     this.setState({
       isEditing: true
     });
   };
 
   _finishEditing = () => {
+    const { toDoValue } = this.state;
+    const { id, updateToDo } = this.props;
+    updateToDo(id, toDoValue);
     this.setState({
       isEditing: false
     });
