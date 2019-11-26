@@ -11,6 +11,9 @@
     "platforms": ["ios", "android", "web"],
     "splash": {
       "backgroundColor": "#F23657"
+    },
+    "android": {
+      "package": "io.ganzik.todo"
     }
   }
 }
