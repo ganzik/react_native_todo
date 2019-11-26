@@ -1,22 +1,21 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Dimensions
-} from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
-const { width, heigth } = Dimensions.get("window");
+const { width, heigth } = Dimensions.get('window');
 
 class ToDo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isEditing: false,
-      isCompleted: false,
       toDoValue: props.text
     };
   }
@@ -24,16 +23,18 @@ class ToDo extends Component {
     text: PropTypes.string.isRequired,
     isCompleted: PropTypes.bool.isRequired,
     deleteToDo: PropTypes.func.isRequired,
+    uncompleteToDo: PropTypes.func.isRequired,
+    completeToDo: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired
   };
 
   render() {
-    const { isCompleted, isEditing, toDoValue } = this.state;
-    const { text, deleteToDo, id } = this.props;
+    const { isEditing, toDoValue } = this.state;
+    const { text, deleteToDo, id, isCompleted } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.column}>
-          <TouchableOpacity onPress={this._togglecomplete}>
+          <TouchableOpacity onPress={this._toggleComplete}>
             <View
               style={[
                 styles.circle,
@@ -51,7 +52,7 @@ class ToDo extends Component {
               value={toDoValue}
               multiline={true}
               onChangeText={this._controllInput}
-              returnKeyType={"done"}
+              returnKeyType={'done'}
               onBlur={this._finishEditing}
             />
           ) : (
@@ -91,12 +92,18 @@ class ToDo extends Component {
       </View>
     );
   }
-  _togglecomplete = () => {
-    this.setState(prevState => {
-      return {
-        isCompleted: !prevState.isCompleted
-      };
-    });
+  _toggleComplete = () => {
+    const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
+    if (isCompleted) {
+      uncompleteToDo(id);
+    } else {
+      completeToDo(id);
+    }
+    // this.setState(prevState => {
+    //   return {
+    //     isCompleted: !prevState.isCompleted
+    //   };
+    // });
   };
 
   _startEditing = () => {
@@ -121,11 +128,11 @@ class ToDo extends Component {
 const styles = StyleSheet.create({
   container: {
     width: width - 50,
-    borderBottomColor: "#bbb",
+    borderBottomColor: '#bbb',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   circle: {
     width: 25,
@@ -135,30 +142,30 @@ const styles = StyleSheet.create({
     borderWidth: 5
   },
   completedCircle: {
-    borderColor: "#bbb"
+    borderColor: '#bbb'
   },
   uncompletedCircle: {
-    borderColor: "#F23657"
+    borderColor: '#F23657'
   },
   text: {
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 20,
     marginVertical: 20
   },
   completedText: {
-    color: "#bbb",
-    textDecorationLine: "line-through"
+    color: '#bbb',
+    textDecorationLine: 'line-through'
   },
   uncompletedText: {
-    color: "black"
+    color: 'black'
   },
   column: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     width: width / 2
   },
   actions: {
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   actionContainer: {
     marginVertical: 10,
